@@ -1,0 +1,2 @@
+const VFAASNet = require('./vendor/vfaas.net/')
+const vfaas = new VFAASNet({protocol: 'ws', host: '0.0.0.0', port: '8080'})

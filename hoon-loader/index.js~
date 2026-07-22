@@ -1,0 +1,7 @@
+const readHoon = (hoonFile) => new Promise((res) => {
+    fetch(hoonFile).then(async el => {
+       return el.text()
+    }).then(text => {
+        res(text)
+    })
+})

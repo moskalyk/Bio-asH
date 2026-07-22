@@ -1,0 +1,12 @@
+//fe const readHoon = (hoonFile) => new Promise((res) => {
+//     fetch(hoonFile).then(async el => {
+//        return el.text()
+//     }).then(text => {
+//         res(text)
+//     })
+// });
+
+// (async () => {
+//     const hoon = await readHoon('./gen/translation/translation.hoon')
+//     console.log(compiler(hoon, 0, false)(1,2))
+// })()
