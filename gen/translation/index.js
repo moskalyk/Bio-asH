@@ -5,7 +5,7 @@
 //         res(text)
 //     })
 // });
-const urbit = require('../../hoon-loader/compiler/index')
+const CompilerProducer = require('../../hoon-loader/compiler/index')
 const fs = require('node:fs');
 
 const readHoon = async (srcFile) => {
@@ -31,8 +31,20 @@ const readHoon = async (srcFile) => {
 }
 
 (async () => {
-    const hoon = await fs.readFileSync(__dirname + '/translation.hoon', 'utf8')
+    const funFile = '/translation.hoon'
+    const hoon = await fs.readFileSync(__dirname + funFile, 'utf8')
     console.log(hoon)
-    console.log(urbit)
-    console.log(urbit(hoon, 0)(['A','T','G']))
+
+    const STATE_ACTION = {
+        // todo
+    }
+    
+    const urbit = new CompilerProducer()
+    
+    urbit.on('after', (datum) => {
+        console.log(`in on ${funFile}`)
+        console.log(datum)
+    })
+    
+    urbit.compile(/*STATE_ACTION*/ hoon, 0)(['A','T','G'])
 })()
