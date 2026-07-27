@@ -156,17 +156,31 @@ class CompilerProducer extends EventProducer {
                         })
                         const args = Object.values(computeVars)
                         if(Object.values(this.vars).length < 1){
+                            // console.log('here')
                             if(runes.indexOf(isRune3) != -1 && runes.indexOf(isRune4) != -1) return runeRunner(matcher[1])(matcher[2])([matcher[3], matcher[4]])
                             else if(runes.indexOf(isRune4) != -1) return runeRunner(matcher[1])(matcher[2])([matcher[3], compiler(matcher[4])])
                             else if(runes.indexOf(isRune3) != -1) return runeRunner(matcher[1])(matcher[2])([compiler(matcher[3]), matcher[4]])
                             else return runeRunner(matcher[1])(matcher[2])([matcher[3], matcher[4]])
                         } else {
-                            if(runes.indexOf(isRune3) != -1 && runes.indexOf(isRune3) != -1) return runeRunner(matcher[1])(matcher[2])(args)
+                                                    console.log('here')
+                            console.log(this.vars)
+                            console.log(matcher[4])
+                            console.log([this.compile(matcher[4], depth+1, false, null, this.vars), ...args.slice(args.length-1-depth,args.length)])
+                            console.log(matcher[1])
+                            console.log(matcher[2])
+                            console.log(args)
+                            if(runes.indexOf(isRune3) != -1 && runes.indexOf(isRune3) != -1) {
+                                return runeRunner(matcher[1])(matcher[2])(args)
+                            }
                             else if(runes.indexOf(isRune4) != -1) {
-                            this.produce('after', runeRunner(matcher[1])(matcher[2])([this.compile(matcher[4], depth+1, false, null, this.vars), ...args.slice(args.length-1-depth,args.length)]));
+                                this.produce('after', runeRunner(matcher[1])(matcher[2])([this.compile(matcher[4], depth+1, false, null, this.vars), ...args.slice(args.length-1-depth,args.length)]));
                             }
                             else if(runes.indexOf(isRune3) != -1) return runeRunner(matcher[1])(matcher[2])([compiler(matcher[4]), args])
-                            else return runeRunner(matcher[1])(matcher[2])(args)
+                            else {
+                            
+                            // return runeRunner(matcher[1])(matcher[2])(args)
+                                this.produce('after', runeRunner(matcher[1])(matcher[2])(args))
+                            }
                         }
 
                     }
