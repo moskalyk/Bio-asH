@@ -1,1 +1,1 @@
-|=  [firstSecond=ud third=@b]  %-  concat  firstSecond  third
+|=  [first=@ud second=@ud third=@ud]  %-  concat  first  %-  concat  second  third

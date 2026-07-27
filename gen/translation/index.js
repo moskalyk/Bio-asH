@@ -25,19 +25,14 @@ const readHoon = async (srcFile) => {
             let mfmData = ''
             
             readStream.on('end', () => {
-                console.log(mfmData)
-                                    res(mfmData)
-
+                res(mfmData)
             })
     })
 }
 
 (async () => {
-
-// const data = fs.readFileSync('/Users/joe/test.txt', 'utf8');
-  console.log(__dirname + '/translation.hoon');
     const hoon = await fs.readFileSync(__dirname + '/translation.hoon', 'utf8')
     console.log(hoon)
     console.log(urbit)
-    console.log(urbit(hoon, 0, false)('A','TG'))
+    console.log(urbit(hoon, 0)(['A','T','G']))
 })()

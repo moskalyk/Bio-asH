@@ -42,22 +42,35 @@ const compiler = (hoon, depth, verbose, args, varsCarry) => {
         if(runes.indexOf(isRune) != -1){
             // const pattern2Cells = /(.*)\[((.+)(?=\=)=(.+))+\s(.*)=(.*)\](.*)/; // (?<rune>\S+)\s{2}\[((?<var>.*?)(?=\=)(.*)]*)\]
             // const pattern1Atom = /((=\/.+)\s{2})(?=\?:)(.+)/; // (?<rune>\S+)\s{2}\[((?<var>.*?)(?=\=)(.*)]*)\]
-            const pattern2Cells = /(.*)\[((.+)(?=\=)=(.+))+\s(.*)=(.*)\](.*)/; // (?<rune>\S+)\s{2}\[((?<var>.*?)(?=\=)(.*)]*)\]
-
-            let match1 = hoon.match(pattern2Cells)
-            const functionName = (a,b) => {
+            // const pattern2Cells = /(.*)\[((.+)(?=\=)=(.+))+\s(.*)=(.*)\](.*)/; // (?<rune>\S+)\s{2}\[((?<var>.*?)(?=\=)(.*)]*)\]
+            // const pattern2Cells = /(.*)\[\s*(\S+)=(\S+)(?=\s)?\](.*)/g
+            const pattern2Cells = /(\s*(?<key>\S+)=(\S+)\s+)/g
+            //(.*)\[\s*((\S+)=(@\S+)\s*)?\](.*)
+            //(\[(?<key>\S+)=(\S+))+(=?])*(.*)
+            
+            let match1 = [...hoon.matchAll(pattern2Cells)]
+            const varsGen = match1.map(el => [el[2].replace('[',''), el[3].replace(']', '')])
+            // console.log(varsGen)
+            const functionName = (args) => {
+                // console.log(args)
                 const pattern2Cells = /(.*)\[((.+)(?=\=)=(.+))+\s(.*)=(.*)\](.*)/; // (?<rune>\S+)\s{2}\[((?<var>.*?)(?=\=)(.*)]*)\]
                 const match1 = hoon.match(pattern2Cells)
                 const isRune = match1[7].trim().slice(0,2)
-                vars[match1[3]] = a
-                vars[match1[5]] = b
+                console.log()
+                args.map((arg,i) => {
+                    vars[varsGen[i][0]]=arg
+                })
+                // vars[match1[3]] = a
+                // vars[match1[5]] = b
                 return computable(isRune, match1[7].trim())
             }
             
             const computable = (isRune, hoon) => {
+            
                 const pattern = /(?<rune>\S+)\s{2}(?<rest>.+)/;
                 const match = hoon.match(pattern)
-
+                // console.log(match)
+                // console.log('varGen :',varsGen)
                 switch(isRune){
                     case runes[8]:
                         const pattern2 = /(?<func>\S+)\s{2}(?<rest>.+)/;
@@ -77,7 +90,7 @@ const compiler = (hoon, depth, verbose, args, varsCarry) => {
                             } else {
                                 computeVars[0] = matchArg.groups.arg
                             }
-                            
+                            console.log('aloa')
                             return runeRunner(match.groups.rune)(funcs.groups.func)([computeVars[0]])
                         }else {
                             
@@ -103,17 +116,19 @@ const compiler = (hoon, depth, verbose, args, varsCarry) => {
                                 Object.values(vars).map((v,i) => {
                                     computeVars[i] = v
                                 })
-                                
+                                const args = Object.values(computeVars)
                                 if(Object.values(vars).length < 1){
                                     if(runes.indexOf(isRune3) != -1 && runes.indexOf(isRune4) != -1) return runeRunner(matcher[1])(matcher[2])([matcher[3], matcher[4]])
                                     else if(runes.indexOf(isRune4) != -1) return runeRunner(matcher[1])(matcher[2])([matcher[3], compiler(matcher[4])])
                                     else if(runes.indexOf(isRune3) != -1) return runeRunner(matcher[1])(matcher[2])([compiler(matcher[3]), matcher[4]])
                                     else return runeRunner(matcher[1])(matcher[2])([matcher[3], matcher[4]])
                                 } else {
-                                    if(runes.indexOf(isRune3) != -1 && runes.indexOf(isRune3) != -1) return runeRunner(matcher[1])(matcher[2])([computeVars['0'], computeVars['1']])
-                                    else if(runes.indexOf(isRune4) != -1) return runeRunner(matcher[1])(matcher[2])([computeVars['0'], compiler(matcher[4], 0, false, null, vars)])
-                                    else if(runes.indexOf(isRune3) != -1) return runeRunner(matcher[1])(matcher[2])([compiler(matcher[4]), computeVars['1']])
-                                    else return runeRunner(matcher[1])(matcher[2])([computeVars['0'], computeVars['1']])
+                                    if(runes.indexOf(isRune3) != -1 && runes.indexOf(isRune3) != -1) return runeRunner(matcher[1])(matcher[2])(args)
+                                    else if(runes.indexOf(isRune4) != -1) {
+                                        return runeRunner(matcher[1])(matcher[2])([compiler(matcher[4], depth+1, false, null, vars), ...args.slice(args.length-1-depth,args.length)])
+                                    }
+                                    else if(runes.indexOf(isRune3) != -1) return runeRunner(matcher[1])(matcher[2])([compiler(matcher[4]), args])
+                                    else return runeRunner(matcher[1])(matcher[2])(args)
                                 }
 
                             }
@@ -128,14 +143,15 @@ const compiler = (hoon, depth, verbose, args, varsCarry) => {
                 }
             }
             
-            if(match1 != null){
+            if(match1.length != 0){
                 return functionName
 
             }
+            
             return computable(isRune, hoon)
         }
     }catch(err){
-        alert(err)
+        console.log(err)
     }
 }
 
