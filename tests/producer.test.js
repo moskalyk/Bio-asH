@@ -1,13 +1,14 @@
 class EventProducer {
-    cb
+    cbs = {}
+    
     on(listener, cb){
-        this.cb = cb
+        this.cbs[listener] = cb
     }
     
     produce(listener, datum){
-        this.cb(datum)
+        this.cbs[listener](datum)
     }
-};
+}
 
 
 (() => {

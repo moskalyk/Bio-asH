@@ -94,13 +94,14 @@ class CompilerProducer extends EventProducer {
                 
                 let match1 = [...hoon.matchAll(pattern2Cells)]
                 this.varsGen = match1.map(el => [el[2].replace('[',''), el[3].replace(']', '')])
+                console.log(this.varsGen)
                 const functionName = this.functionName
                 
                 if(match1.length != 0){
                     return functionName
 
                 }
-                
+                console.log('computable')
                 return this.computable(isRune, hoon)
             }
         }catch(err){
@@ -163,23 +164,25 @@ class CompilerProducer extends EventProducer {
                             else return runeRunner(matcher[1])(matcher[2])([matcher[3], matcher[4]])
                         } else {
                                                     console.log('here')
-                            console.log(this.vars)
-                            console.log(matcher[4])
-                            console.log([this.compile(matcher[4], depth+1, false, null, this.vars), ...args.slice(args.length-1-depth,args.length)])
-                            console.log(matcher[1])
+                            // console.log(this.vars)
+                            // console.log(matcher[4])
+                            // console.log([this.compile(/matcher[4], depth+1, false, null, this.vars), ...args.slice(args.length-1-depth,args.length)])
+                            // console.log(matcher[1])
                             console.log(matcher[2])
                             console.log(args)
                             if(runes.indexOf(isRune3) != -1 && runes.indexOf(isRune3) != -1) {
                                 return runeRunner(matcher[1])(matcher[2])(args)
                             }
                             else if(runes.indexOf(isRune4) != -1) {
+                                console.log(args)
                                 this.produce('after', runeRunner(matcher[1])(matcher[2])([this.compile(matcher[4], depth+1, false, null, this.vars), ...args.slice(args.length-1-depth,args.length)]));
                             }
                             else if(runes.indexOf(isRune3) != -1) return runeRunner(matcher[1])(matcher[2])([compiler(matcher[4]), args])
                             else {
                             
-                            // return runeRunner(matcher[1])(matcher[2])(args)
-                                this.produce('after', runeRunner(matcher[1])(matcher[2])(args))
+                            return runeRunner(matcher[1])(matcher[2])(args)
+                                
+                                // this.produce('after', runeRunner(matcher[1])(matcher[2])(args))
                             }
                         }
 
@@ -193,7 +196,7 @@ class CompilerProducer extends EventProducer {
                 }
                 break;
         }
-        return computable(isRune, match1[7].trim())
+        // return computable(isRune, match1[7].trim())
     }
 }
 
