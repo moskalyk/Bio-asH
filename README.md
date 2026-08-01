@@ -15,6 +15,7 @@ Biology as Hoon. biology and biochemistry functioning cycles encoded into basic 
 2. [x] hoon compiling files (requires anotherlook)
 3. [x] redux (state channel) (requires state_actions)
 4. [ ] scry callable library
+5. [x] mold data dtype parser (requires more recursion)
 
 ## how to run
 
@@ -74,6 +75,13 @@ const { scry } = require('./scry.js');
     
     })
 })()
+```
+
+### 5. molds (+$ data type)
+```js
+    const cp = new CompilerProducer({wait: wait})
+    const recipesAsHoonJSON = cp.compiler(/*STATES*/hoon, 0)
+    console.log('check', typeChecker(recipesAsHoonJSON, {recipients: JSON.parse(eTransferDataFromFile)}))
 ```
 
 #### def'n
