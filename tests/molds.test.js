@@ -105,7 +105,7 @@ const typeChecker = (hoonCore, el) => {
     const wait = 200
     const cp = new CompilerProducer({wait: wait})
     
-    const recipesAsHoonJSON = cp.compiler(/*STATES*/hoon, 0)
+    const etransfersAsHoonJSON = cp.compiler(/*STATES*/hoon, 0)
     
-    console.log('(rough) mold check',typeChecker(recipesAsHoonJSON, {recipients: JSON.parse(rawData)}))
+    console.log('(rough) mold check',typeChecker(etransfersAsHoonJSON, {recipients: JSON.parse(rawData)}))
 })()

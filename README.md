@@ -80,8 +80,8 @@ const { scry } = require('./scry.js');
 ### 5. molds (+$ data type)
 ```js
     const cp = new CompilerProducer({wait: wait})
-    const recipesAsHoonJSON = cp.compiler(/*STATES*/hoon, 0)
-    console.log('check', typeChecker(recipesAsHoonJSON, {recipients: JSON.parse(eTransferDataFromFile)}))
+    const etransfersAsHoonJSON = cp.compiler(/*STATES*/hoon, 0)
+    console.log('check', typeChecker(etransfersAsHoonJSON, {recipients: JSON.parse(eTransferDataFromFile)}))
 ```
 
 #### def'n
