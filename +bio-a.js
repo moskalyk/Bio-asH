@@ -18,6 +18,7 @@ const { exec } = require('child_process');
         console.log('commands:')
         // console.log(' test-ring \t\ttest a ring signature flow')
         console.log(' test-redux \t\ttest a redux with concat and trap flow')
+        console.log(' fat\t\t\trun a fat reaction series')
     }
     
     if(argv[2]){
@@ -39,6 +40,13 @@ const { exec } = require('child_process');
         // }
         case 'test-redux': {
             require('./tests/redux.test.js')
+            break;
+        }
+        case 'fat': {
+            const callable = '^-  @' + '  ' + `.^(@  %gx  /~zod/%fat/${1}/r/site/%spec)`
+            const regex = /\S{2}\((?<type>\S)\s{2}%(?<care>\S{2})\s{2}\/(?<ship>~\S{3})\/(?<desk>)+?(?<agent>%.+)\/(?<case>\d+)(?<path>\/\S+)+(?=\/%)\/(?<noun>.+)\)/;
+            const scry = callable.match(regex)
+            require(`./tests/${scry.groups.agent.replace('%','')}.test.js`)
             break;
         }
     }

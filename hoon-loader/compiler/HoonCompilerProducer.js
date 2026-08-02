@@ -16,11 +16,20 @@ const gates = {
     'add': (arg1, arg2) => {
       return parseInt(arg1) + parseInt(arg2)
     },
+    'sub': (arg1, arg2) => {
+      return parseInt(arg1) - parseInt(arg2)
+    },
     'mul': (arg1, arg2) => {
       return parseFloat(arg1) * parseFloat(arg2)
     },
+    'div': (arg1, arg2) => {
+      return parseFloat(arg1) / parseFloat(arg2)
+    },
     'gth': (arg1, arg2) => {
         return parseFloat(arg1) >= parseFloat(arg2)
+    },
+    'lth': (arg1, arg2) => {
+        return parseFloat(arg1) <= parseFloat(arg2)
     },
     '@': (arg) => {
       return arg
@@ -182,19 +191,20 @@ class CompilerProducer extends EventProducer {
                     } else {
                         computeVars[0] = matchArg.groups.arg
                     }
+                    console.log('rests')
                     return runeRunner(match.groups.rune)(funcs.groups.func)([computeVars[0]])
                 }else {
                     
                     const isInnerRune = rests[1].slice(0,2)
                     
                     
-                    if(runes.indexOf(isInnerRune) != -1 && ['add', 'mul', 'concat'].includes(funcs.groups.func)){
+                    if(runes.indexOf(isInnerRune) != -1 && ['add', 'mul', 'concat', 'div'].includes(funcs.groups.func)){
                         const pattern4 = /(.+?)(?=\s{2})\s{2}(.+?)(?=\s{2})(\s{2})*(.*)\s{2}(.*)/
                         const rests = hoon.match(pattern4)
                         console.log('runner')
                         if(runes.indexOf(rests[1]) != -1) return runeRunner(rests[1])(rests[2])([this.compile(rests[4]), rests[5]])
                         
-                    } else if (runes.indexOf(rests[1]) == -1 && ['add', 'mul', 'concat'].includes(funcs.groups.func)){
+                    } else if (runes.indexOf(rests[1]) == -1 && ['add', 'mul', 'concat', 'div'].includes(funcs.groups.func)){
 
                         let pattern4 = /(.+?)\s{2}(.+?)\s{2}(.+?)\s{2}(.+)/
                         let string = hoon
@@ -204,31 +214,47 @@ class CompilerProducer extends EventProducer {
                         const isRune4 = matcher[4].slice(0,2)
                         
                         let computeVars = {}
-                        
+                        // console.log(this.vars)
                         Object.values(this.vars).map((v,i) => {
                             computeVars[i] = v
                         })
                         const args = Object.values(computeVars)
                         if(Object.values(this.vars).length < 1){
-                            // console.log('here')
+                            console.log('here')
                             if(runes.indexOf(isRune3) != -1 && runes.indexOf(isRune4) != -1) return runeRunner(matcher[1])(matcher[2])([matcher[3], matcher[4]])
                             else if(runes.indexOf(isRune4) != -1) return runeRunner(matcher[1])(matcher[2])([matcher[3], this.compile(matcher[4])])
                             else if(runes.indexOf(isRune3) != -1) return runeRunner(matcher[1])(matcher[2])([this.compile(matcher[3]), matcher[4]])
                             else return runeRunner(matcher[1])(matcher[2])([matcher[3], matcher[4]])
                         } else {
-                                                    // console.log('here')
                             if(runes.indexOf(isRune3) != -1 && runes.indexOf(isRune3) != -1) {
-                                return runeRunner(matcher[1])(matcher[2])(args)
+                            console.log('runnin')
+                                this.produce('after', runeRunner(matcher[1])(matcher[2])(args))
+
                             }
                             else if(runes.indexOf(isRune4) != -1) {
+                                console.log('traps')
                                 setTimeout(() => {
-                                    this.produce('after', runeRunner(matcher[1])(matcher[2])([this.compile(matcher[4], depth+1, false, null, this.vars), ...args.slice(args.length-1-depth,args.length)]));
+                                this.produce('after', runeRunner(matcher[1])(matcher[2])([this.compile(matcher[4], depth+1, false, null, this.vars), ...args.slice(args.length-1-depth,args.length)]));
                                 }, this.waitMs)
                             }
-                            else if(runes.indexOf(isRune3) != -1) return runeRunner(matcher[1])(matcher[2])([this.compile(matcher[4]), args])
-                            else {
+                            else if(runes.indexOf(isRune3) != -1) {
+                                                        console.log('runnin')
+
+                            this.produce('after', runeRunner(matcher[1])(matcher[2])([this.compile(matcher[4]), args]))
                             
-                            return runeRunner(matcher[1])(matcher[2])(args)
+                            }
+                            else {
+                                                                                       // console.log(args)
+                            // small hack
+                            if(args[3]){
+                                this.produce('after', runeRunner(matcher[1])(matcher[2])(args.slice(2,4)))
+
+                            }else {
+                                                                this.produce('after', runeRunner(matcher[1])(matcher[2])(args))
+
+                            }
+
+                            // return runeRunner(matcher[1])(matcher[2])(args)
                             }
                         }
 
@@ -242,6 +268,7 @@ class CompilerProducer extends EventProducer {
                 }
                 break;
         }
+
         // return this.computable(isRune, match1[7].trim())
     }
     
@@ -253,11 +280,13 @@ class CompilerProducer extends EventProducer {
             const isRune = hoon.slice(0,2)
             // const pattern2Cells = /(.*)\[((.+)(?=\=)=(.+))+\s(.*)=(.*)\](.*)/g; // (?<rune>\S+)\s{2}\[((?<var>.*?)(?=\=)(.*)]*)\]
                 const pattern2Cells = /(\s*(?<key>\S+)=(\S+)\s+)/g
-
+            
             const pattern = /(?<rune>\S+)\s{2}(?<func>\w+)\s{2}(?<arg1>.*)\s{2}(?<arg2>.*)/;
             let match1 = [...hoon.matchAll(pattern2Cells)]
             this.varsGen = match1.map(el => [el[2].replace('[',''), el[3].replace(']', '')])
+            // console.log('10',hoon)
                         this.hoon = hoon
+            // console.log(this.hoon)
             if(isRune == runes[12]){
                             return this.computable(isRune, hoon)
 
@@ -461,36 +490,49 @@ class CompilerProducer extends EventProducer {
 
                     let compute1;
                     let compute2;
-
+                    // console.log(updatedMatch) 
+                    // console.log(vars)
+                    // console.log(vars2)
+                    // console.log(updatedMatch[5])
+                    // console.log(vars2[updatedMatch[5]])
                     compute1 = vars2[updatedMatch[5]]
-                
+                    // console.log('compute1', compute1)
                     if(updatedMatch[5] in vars2) {
-                        compute1 = vars[updatedMatch[5]]
+                        // console.log('in')
+                        compute1 = vars2[updatedMatch[5]]
                     } else {
                         compute1 = updatedMatch[5]
                     }
-                
+                                    // console.log('compute1', compute1)
+
                      if(updatedMatch[6] in vars2) {
                         compute2 = vars2[updatedMatch[6]]
                     } else {
                        compute2 = updatedMatch[6]
                     }
                     await wait(this.waitMs)
-                    this.produce('*', {step: Number(compute2)})
+                    // console.log([compute1, compute2])
+                    // console.log(updatedMatch.groups.arg2)
+                    this.produce('*', {step: [compute1, compute2]})
 
                     vars2[updatedMatch[1]] = runeRunner(updatedMatch.groups.rune)(updatedMatch.groups.arg2)([compute1, compute2])
+                    // console.log('gg',updatedMatch[1])
+                    // console.log(updatedMatch[1])
                     if(updatedMatch[0].trim() == runes[7]) break;
                     
                     vars2[updatedMatch[7]] = updatedMatch[8]
+                    // console.log('1',updatedMatch[8])
                     secondIshMatch[2] = secondIshMatch[2].replace('%=  $  '+ updatedMatch[1] +'  '+ updatedMatch[2] + updatedMatch[3] + '  ' + updatedMatch[6], '')
                     vars2[secondIshMatch[2].trim().split(' ')[0]] = secondIshMatch[2].trim().split(' ')[2]
+                    // console.log('2', secondIshMatch[2].trim().split(' ')[0])
                     if(runeRunner(thirdMatch.groups.rune)(thirdMatch.groups.func)([vars2[thirdMatch.groups.arg1], vars2[thirdMatch.groups.arg2]])) break;
 
                 }
                 
                 break;
             }
-            
+                    this.produce('end')
+
             return vars2[thirdMatch.groups.arg3]
 
         } else {
