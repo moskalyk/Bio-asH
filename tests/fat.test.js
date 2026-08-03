@@ -14,8 +14,8 @@ const wait = 100
 
 const cp = new CompilerProducer({wait: wait})
 
+// TODO: make as class eith actionSet passed to constructor
 const run = async (action, actionSet, vars) => {
-    console.log(actionSet[action])
     return await cp.compiler(actionSet[action], 0)(vars)
 }
 ;(async () => {
@@ -65,8 +65,8 @@ const run = async (action, actionSet, vars) => {
     const recipes = await response.json();
     const functioning = true;
     eating = true;
-    // LOGGING peer review
     
+    // LOGGING peer review
     // const wait = async (ms) => new Promise((res) => setTimeout(res, ms))
     
     // while(functioning){
