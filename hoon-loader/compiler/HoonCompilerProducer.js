@@ -226,21 +226,21 @@ class CompilerProducer extends EventProducer {
                             const isVariableNumOrHoon2 = rests[5]
 
                             if(this.vars[isVariableNumOrHoon1] && this.vars[isVariableNumOrHoon2]){
-                                console.log('both vars')
+                                // console.log('both vars')
                                 const res = runeRunner(isRune)(func)([this.vars[isVariableNumOrHoon1], this.vars[isVariableNumOrHoon2]])
                                 if(!isNaN(res)) {
                                     this.produce('after', res)
                                     return res
                                 }  
                             } else if(this.vars[isVariableNumOrHoon1] && isNumber(Number(isVariableNumOrHoon2))){
-                                console.log('variable 1')
+                                // console.log('variable 1')
                                 const res = runeRunner(isRune)(func)([this.vars[isVariableNumOrHoon1], isVariableNumOrHoon2])
                                 if(!isNaN(res)) {
                                     this.produce('after', res)
                                     return res
                                 }  
                             } else if(isNumber(Number(isVariableNumOrHoon1) && this.vars[isVariableNumOrHoon2])){
-                                console.log('variable 2')
+                                // console.log('variable 2')
                                 const res = runeRunner(isRune)(func)([isVariableNumOrHoon1, this.vars[isVariableNumOrHoon2]])
                                 if(!isNaN(res)) {
                                     this.produce('after', res)
@@ -264,21 +264,21 @@ class CompilerProducer extends EventProducer {
                             
                             // check if numbers
                             if(isNumber(Number(isVariableNumOrHoon1)) && isNumber(Number(isVariableNumOrHoon2))){
-                                console.log('both numbers')
+                                // console.log('both numbers')
                                 const res = runeRunner(isRune)(func)([this.compile(isVariableNumOrHoon2), isVariableNumOrHoon2])
                                 if(!isNaN(res)) {
                                     this.produce('after', res)
                                     return res
                                 }   
                             } else if(isNumber(Number(isVariableNumOrHoon1)) && runes.indexOf(isVariableNumOrHoon2.slice(0,2))){
-                                console.log('variable 1')
+                                // console.log('variable 1')
                                 const res = runeRunner(isRune)(func)([isVariableNumOrHoon1, this.compile(isVariableNumOrHoon2)])
                                 if(!isNaN(res)) {
                                     this.produce('after', res)
                                     return res
                                 }   
                             } else if(isNumber(Number(isVariableNumOrHoon2) && runes.indexOf(isVariableNumOrHoon1.slice(0,2))) ){
-                                console.log('variable 2')
+                                // console.log('variable 2')
                                 const res = runeRunner(isRune)(func)([this.compile(isVariableNumOrHoon1), isVariableNumOrHoon2])
                                 if(!isNaN(res)) {
                                     this.produce('after', res)
@@ -333,7 +333,7 @@ class CompilerProducer extends EventProducer {
                             else {
                                                                                        // console.log(args)
                                 if(isNumber(this.vars[isVariable1]) && isNumber(this.vars[isVariable2])){
-                                    console.log('both vars')
+                                    // console.log('both vars')
                                     const res = runeRunner(rune)(func)([this.vars[isVariable1], this.vars[isVariable2]])
                                     if(!isNaN(res)) {
                                         this.produce('after', res)
@@ -342,9 +342,8 @@ class CompilerProducer extends EventProducer {
                                 } 
                                 // first variable
                                 else if(isNumber(this.vars[isVariable1]) && isNumber(Number(isVariable2))) {
-                                    console.log('var 1')
+                                    // console.log('var 1')
                                     const res = runeRunner(rune)(func)([this.vars[isVariable1], Number(isVariable2)])
-                                    console.log('result', res)
                                     if(!isNaN(res)) {
                                         this.produce('after', res)
                                         return res
@@ -352,7 +351,7 @@ class CompilerProducer extends EventProducer {
                                 }
                                 // second variable
                                 else if(isNumber(Number(isVariable1)) && isNumber((this.vars[isVariable2]))) {
-                                    console.log('number')
+                                    // console.log('number')
                                     const res = runeRunner(rune)(func)([this.vars[isVariable1], Number(isVariable2)])
                                     if(!isNaN(res)) {
                                         this.produce('after', res)
@@ -372,14 +371,14 @@ class CompilerProducer extends EventProducer {
                                 const isVariableNumOrHoon2 = isVariable2
                                 
                                 if(runes.indexOf(isVariableNumOrHoon1.slice(0,2)) && isNumber(this.vars[isVariableNumOrHoon2])){
-                                    console.log('var 1')
+                                    // console.log('var 1')
                                     const res = runeRunner(isRune)(func)([this.compile(isVariableNumOrHoon1), this.vars[isVariableNumOrHoon2]])
                                     if(!isNaN(res)) {
                                         this.produce('after', res)
                                         return res
                                     }      
                                 } else if(runes.indexOf(isVariableNumOrHoon2.slice(0,2)) && isNumber(this.vars[isVariableNumOrHoon1])) {
-                                     console.log('var 2')
+                                     // console.log('var 2')
                                     const res = runeRunner(isRune)(func)([this.vars[isVariableNumOrHoon1], this.compile(isVariableNumOrHoon2)])
                                     if(!isNaN(res)) {
                                         this.produce('after', res)
@@ -438,7 +437,6 @@ class CompilerProducer extends EventProducer {
                 return this.computable(isRune, hoon)
 
             }
-            console.log('checking')
             if(runes.includes(isRune) && isRune == runes[2]){
                 const pattern2Cells = /(.*)\[((.+)(?=\=)=(.+))+\s(.*)=(.*)\](.*)/; // (?<rune>\S+)\s{2}\[((?<var>.*?)(?=\=)(.*)]*)\]
                 const pattern1Atom = /((=\/.+)\s{2})(?=\?:)(.+)/; // (?<rune>\S+)\s{2}\[((?<var>.*?)(?=\=)(.*)]*)\]
