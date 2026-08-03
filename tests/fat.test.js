@@ -4,10 +4,9 @@ const fs = require('fs')
 
 ;(async () => {
     
-    const hoon1 = await fs.readFileSync(__dirname + '/../gen/fat/fattyAcidSynthase.hoon', 'utf-8')
-    const hoon2 = await fs.readFileSync(__dirname + '/../gen/fat/citrateShuffle.hoon', 'utf-8')
-    const hoon3 = await fs.readFileSync(__dirname + '/../gen/fat/pyruvateDiv.hoon', 'utf-8')
-    // const hoon2 = await fs.readFileSync(__dirname + '/../gen/traps/trapGate.hoon', 'utf-8')
+    const hoon1 = await fs.readFileSync(__dirname + '/../hoon/fat/fattyAcidSynthase.hoon', 'utf-8')
+    const hoon2 = await fs.readFileSync(__dirname + '/../hoon/fat/citrateShuffle.hoon', 'utf-8')
+    const hoon3 = await fs.readFileSync(__dirname + '/../hoon/fat/pyruvateDiv.hoon', 'utf-8')
     
     const wait = 100
     const cp = new CompilerProducer({wait: wait})
