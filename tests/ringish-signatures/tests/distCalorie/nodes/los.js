@@ -1,23 +1,21 @@
-const VFAASNet = require('../../../vendor/vfaas.net/')
+const VFAASNet = require('../../../../../vendor/vfaas.net/')
 const vfaas = new VFAASNet({protocol: 'ws', host: '0.0.0.0', port: '8080'})
-const { CompilerRunner, cp } = require('./redux.js')
+const { CompilerRunner, cp } = require('./../redux.js')
+
 const STATE_ACTION_FILES = {
-    'EAT': '/../../../hoon/steppers/calorie/caloriesFromMacro.hoon',
-    'FATTY_ACID_SYNTHASE': '/../../../hoon/fat/fattyAcidSynthase.hoon',
-    'CITRATE_SHUFFLE': '/../../../hoon/fat/citrateShuffle.hoon',
-    'PYRUVATE_DIV': '/../../../hoon/fat/pyruvateDiv.hoon'
+    'EAT': '/../../../../hoon/steppers/calorie/caloriesFromMacro.hoon',
+    'FATTY_ACID_SYNTHASE': '/../../../../hoon/fat/fattyAcidSynthase.hoon',
+    'CITRATE_SHUFFLE': '/../../../../hoon/fat/citrateShuffle.hoon',
+    'PYRUVATE_DIV': '/../../../../hoon/fat/pyruvateDiv.hoon'
 }
 
 const cr = new CompilerRunner({STATE_ACTION_FILES: STATE_ACTION_FILES})
-const ringish = require('../../index.js');
+const ringish = require('../../../index.js');
 let pass1;
 
 cp.on('after', async (datum) => {
     console.log('hoon compute', datum)
     const re = ringish.enhash([pass1], datum, 1)
-
-
-    // console.log(re);
     vfaas.webSocket.send('node2', JSON.stringify({msg: 'distCalorie', pw: pass1, re: re, status: 52}))
 })
 
@@ -29,7 +27,6 @@ cp.on('*', async (datum) => {
 const catchAll = async (datum) => {
     console.log('*',datum)
     if(datum.status == 204){
-        console.log(JSON.parse(datum.msg))
         console.log('first time gobblde gorp')
         /*
             de C5]Y1!f,@a_L
@@ -64,32 +61,17 @@ const redux = async (datum) => {
     if(datum.status == 204){
         const bas = JSON.parse(datum.msg).bas
         const msg = JSON.parse(datum.msg)
-        // basGlobal = msg.bas
-        console.log('bas global',msg)
         if('pw3' in msg){
             const de = ringish.dehash([msg.pw1, msg.pw2, msg.pw3], bas, 1)
-            // console.log('result', de.length);
             const trimmedNumber = Number(de.replaceAll('\u0000', ''))
             console.log('result', trimmedNumber);
             (await cr.run('PYRUVATE_DIV', [trimmedNumber, 5]));
-
         }
-        // vfaas.webSocket.send('node3De', JSON.stringify({msg: 'sending msg', bas: bas, pw: pass1, status: 55}))
     }
 }
 
-// // const dec = async (datum) => {
-// //     if(datum.status == 204){
-// //         console.log(JSON.parse(datum.msg)) // 'A', 'T', 'G'
-// //         console.log(basGlobal) // bas from Node 3
-// //         const de = ringish.dehash([JSON.parse(datum.msg).first+JSON.parse(datum.msg).second,JSON.parse(datum.msg).third], basGlobal, 1)
-// //         console.log(de) // ATG
-// //     }
-// // }
-
 vfaas.aPath(redux)
 vfaas.aPath(catchAll)
-// // vfaas.aPath(dec)
 
 vfaas.aBoot(() => {
     pass1 = 'A'
@@ -99,14 +81,11 @@ vfaas.aBoot(() => {
 
     setTimeout(async () => {
         const fat = 8;
+        
         // TODO: complete calorie computation
         (await cr.run('EAT', [fat, 9, 0]));
 
         // enhash values
         (await cr.run('FATTY_ACID_SYNTHASE', [acetyl_CoA, OAA]));
     }, 0)
-
 })
-
-
-

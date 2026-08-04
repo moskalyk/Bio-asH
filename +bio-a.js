@@ -61,12 +61,12 @@ const { exec } = require('child_process');
             const regex = /\S{2}\((?<type>\S)\s{2}%(?<care>\S{2})\s{2}\/(?<ship>~\S{3})\/(?<desk>)+?(?<agent>%.+)\/(?<case>\d+)(?<path>\/\S+)+(?=\/%)\/(?<noun>.+)\)/;
             const scry = callable.match(regex)
             
-            import(`./ringish-signatures/tests/dist${capitalizeFirstLetter(scry.groups.agent.replace('%',''))}/mor.js`).then(() => {
+            import(`./tests/ringish-signatures/tests/dist${capitalizeFirstLetter(scry.groups.agent.replace('%',''))}/nodes/mor.js`).then(() => {
                 console.log('running after ~mor')
-                require(`./ringish-signatures/tests/dist${capitalizeFirstLetter(scry.groups.agent.replace('%',''))}/zod.js`)
+                require(`./tests/ringish-signatures/tests/dist${capitalizeFirstLetter(scry.groups.agent.replace('%',''))}/nodes/zod.js`)
             }).then(() => {
                 console.log('post-post')
-                require(`./ringish-signatures/tests/dist${capitalizeFirstLetter(scry.groups.agent.replace('%',''))}/los.js`)
+                require(`./tests/ringish-signatures/tests/dist${capitalizeFirstLetter(scry.groups.agent.replace('%',''))}/nodes/los.js`)
             })
             break
         }

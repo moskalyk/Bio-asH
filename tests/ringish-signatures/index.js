@@ -1,4 +1,4 @@
-const {Bas} = require('../vendor/bas/index.js');
+const {Bas} = require('../../vendor/bas/index.js');
 
 class Ringish {
     enhash(pws, msg, scalar=10) {
