@@ -51,11 +51,17 @@ class EventProducer {
     cbs = {}
     
     on(listener, cb){
-        this.cbs[listener] = cb
+        if(this.cbs[listener]){
+            this.cbs[listener].push(cb)
+        }else {
+            this.cbs[listener] = [cb]
+        }
     }
     
     produce(listener, datum){
-        this.cbs[listener](datum)
+        console.log(listener)
+        console.log(datum)
+        this.cbs[listener].forEach(cb => cb(datum))
     }
 }
 

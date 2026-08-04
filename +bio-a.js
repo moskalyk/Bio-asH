@@ -19,11 +19,17 @@ const { exec } = require('child_process');
         // console.log(' test-ring \t\ttest a ring signature flow')
         console.log(' test-redux \t\ttest a redux with concat and trap flow')
         console.log(' fat\t\t\trun a fat reaction series')
+        console.log(' dist-calorie\t\t\trun a calorie calculation on multiple nodes')
+    }
+    
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
     
     if(argv[2]){
         
     }
+    
     switch(argv[2]){
         // case 'test-ring': {
         //     console.log('running a streamed ring stdout')
@@ -48,6 +54,21 @@ const { exec } = require('child_process');
             const scry = callable.match(regex)
             require(`./tests/${scry.groups.agent.replace('%','')}.test.js`)
             break;
+        }
+        
+        case 'dist-calorie': {
+            const callable = '^-  @' + '  ' + `.^(@  %gx  /~zod/%calorie/${1}/r/site/%spec)`
+            const regex = /\S{2}\((?<type>\S)\s{2}%(?<care>\S{2})\s{2}\/(?<ship>~\S{3})\/(?<desk>)+?(?<agent>%.+)\/(?<case>\d+)(?<path>\/\S+)+(?=\/%)\/(?<noun>.+)\)/;
+            const scry = callable.match(regex)
+            
+            import(`./ringish-signatures/tests/dist${capitalizeFirstLetter(scry.groups.agent.replace('%',''))}/mor.js`).then(() => {
+                console.log('running after ~mor')
+                require(`./ringish-signatures/tests/dist${capitalizeFirstLetter(scry.groups.agent.replace('%',''))}/zod.js`)
+            }).then(() => {
+                console.log('post-post')
+                require(`./ringish-signatures/tests/dist${capitalizeFirstLetter(scry.groups.agent.replace('%',''))}/los.js`)
+            })
+            break
         }
     }
 })()
