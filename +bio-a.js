@@ -19,7 +19,8 @@ const { exec } = require('child_process');
         // console.log(' test-ring \t\ttest a ring signature flow')
         console.log(' test-redux \t\ttest a redux with concat and trap flow')
         console.log(' fat\t\t\trun a fat reaction series')
-        console.log(' dist-calorie\t\t\trun a calorie calculation on multiple nodes')
+        console.log(' dist-fatty-acid-synthase\t\t\trun a fatty acid synthase calculation on multiple nodes')
+        console.log(' dist-calorie\t\t\tTODO: run a calorie calculation on multiple nodes')
     }
     
     function capitalizeFirstLetter(string) {
@@ -56,7 +57,7 @@ const { exec } = require('child_process');
             break;
         }
         
-        case 'dist-calorie': {
+        case 'dist-fatty-acid-synthase': {
             const callable = '^-  @' + '  ' + `.^(@  %gx  /~zod/%calorie/${1}/r/site/%spec)`
             const regex = /\S{2}\((?<type>\S)\s{2}%(?<care>\S{2})\s{2}\/(?<ship>~\S{3})\/(?<desk>)+?(?<agent>%.+)\/(?<case>\d+)(?<path>\/\S+)+(?=\/%)\/(?<noun>.+)\)/;
             const scry = callable.match(regex)
